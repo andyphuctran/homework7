@@ -9,14 +9,17 @@ var express = require('express'),
 
 app.set('views', path.join(__dirname, '/views'));
 app.set('view engine', 'ejs');
+
+
 app.get('/', function(req, res) {
     res.status(200);
     MongoClient.connect(url)
         .then(function(db) {
             let collection = db.collection('homework7');
             collection.find().toArray(function(err, doc) {
-                let decipher = crypto.createCipher(algorithm, key);
+                let decipher = crypto.createDecipher(algorithm, key);
                 let text = decipher.update(doc[0].message, 'hex', "utf8");
+                // console.log(text);
                 text += decipher.final('utf8');
                 res.render('index', { message: text });
                 // console.log(doc[0].message);
@@ -25,4 +28,4 @@ app.get('/', function(req, res) {
         .catch(function(err) {
             console.log(err);
         });
-}).listen(3000, '127.0.01');
+}).listen(3000, '127.0.01')
